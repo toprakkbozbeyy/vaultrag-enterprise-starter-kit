@@ -29,7 +29,7 @@
 
 **VaultRAG Enterprise - the complete, hardened stack. One-time payment. Full source code. No subscription.**
 
-### [👉 GET VAULTRAG ENTERPRISE - $149 👈](https://whop.com/checkout/YOUR_PRODUCT_ID)
+### [👉 GET VAULTRAG ENTERPRISE - $149 👈](https://whop.com/linkedin-1cc8/vaultrag-enterprise-starter-kit/)
 
 [![Get VaultRAG Enterprise - $149](https://img.shields.io/badge/GET%20VAULTRAG%20ENTERPRISE-%24149%20one--time-FF4B4B?style=for-the-badge)](https://whop.com/checkout/YOUR_PRODUCT_ID)
 
@@ -103,7 +103,7 @@ The **Lite** edition in this repository is a fully working, MIT-licensed RAG bac
 
 <div align="center">
 
-### [🏢 Upgrade to VaultRAG Enterprise - $149 one-time →](https://whop.com/checkout/YOUR_PRODUCT_ID)
+### [🏢 Upgrade to VaultRAG Enterprise - $149 one-time →](https://whop.com/linkedin-1cc8/vaultrag-enterprise-starter-kit/)
 
 *One payment. Full source code. No subscription, no per-token meter.*
 
@@ -339,7 +339,7 @@ The Lite edition in this repository is released under the [MIT License](LICENSE)
 
 **Your documents. Your servers. Your answers.**
 
-### [🏢 Get VaultRAG Enterprise - $149 one-time →](https://whop.com/checkout/YOUR_PRODUCT_ID)
+### [🏢 Get VaultRAG Enterprise - $149 one-time →](https://whop.com/linkedin-1cc8/vaultrag-enterprise-starter-kit/)
 
 </div>
 
