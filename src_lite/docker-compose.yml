@@ -1,0 +1,85 @@
+name: vaultrag-lite
+
+# VaultRAG Lite: ui (Streamlit) -> backend (FastAPI + embedded ChromaDB) -> ollama (LLM + embeddings)
+# Only the UI and API are published, and only on 127.0.0.1. Ollama is never exposed.
+# Internet is needed exactly once, to download the models. After that the stack runs offline.
+#
+#   docker compose up -d --build
+#   docker compose logs -f ollama-pull      # first start: wait for the model download
+#   open http://localhost:8501
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 10s
+
+  # One-shot job: downloads the chat model and the embedding model into the ollama_data volume.
+  ollama-pull:
+    image: ollama/ollama:latest
+    restart: on-failure:10
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["ollama pull ${LLM_MODEL:-qwen2.5:7b} && ollama pull ${EMBEDDING_MODEL:-nomic-embed-text}"]
+
+  backend:
+    build: .
+    restart: unless-stopped
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-nomic-embed-text}
+      CHROMA_PERSIST_DIR: /data/chroma
+      ANONYMIZED_TELEMETRY: "False"
+    volumes:
+      - lite_data:/data
+    depends_on:
+      ollama:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"
+      interval: 15s
+      timeout: 6s
+      retries: 10
+      start_period: 20s
+
+  ui:
+    build: .
+    restart: unless-stopped
+    command:
+      - streamlit
+      - run
+      - app.py
+      - --server.port=8501
+      - --server.address=0.0.0.0
+      - --server.headless=true
+      - --browser.gatherUsageStats=false
+    environment:
+      RAG_API_URL: http://backend:8000
+      WHOP_URL: ${WHOP_URL:-https://whop.com/checkout/YOUR_PRODUCT_ID}
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${UI_PORT:-8501}:8501"
+
+volumes:
+  ollama_data:
+  lite_data:
